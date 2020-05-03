@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		
+		<!-- its broken btw -->
+		<style type="text/css">
+			#output {
+				background-color: rgb(200, 200, 200);
+				width: 30%;
+				white-space: pre-line;
+				padding: 5px;
+			}
+		</style>
+	</head>
+	<body>
+		<p>input: </p>
+		<textarea id="input"></textarea>
+		<p>output: </p>
+		<pre id="output">it will be here</pre>
+		<button onclick="convert()">convert</button>
+		<p>convert to</p>
+		<select id="combo">
+			<option value="0" selected="selected">Fullwidth Latin Letters</option>
+			<option value="1">Math Sans Italic</option>
+			<option value="2">ZaBoRcHiK</option>
+		</select>
+		<script>
+			const input = document.getElementById("input");
+			const output = document.getElementById("output");
+			const combobox = document.getElementById("combo");
+			
+			const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+			const fll = "ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ";
+			const mss = "&#x1D608; &#x1D609; &#x1D60A; &#x1D60B; &#x1D60C; &#x1D60D; &#x1D60E; &#x1D60F; &#x1D610; &#x1D611; &#x1D612; &#x1D613; &#x1D614; &#x1D615; &#x1D616; &#x1D617; &#x1D618; &#x1D619; &#x1D61A; &#x1D61B; &#x1D61C; &#x1D61D; &#x1D61E; &#x1D61F; &#x1D620; &#x1D621; &#x1D622; &#x1D623; &#x1D624; &#x1D625; &#x1D626; &#x1D627; &#x1D628; &#x1D629; &#x1D62A; &#x1D62B; &#x1D62C; &#x1D62D; &#x1D62E; &#x1D62F; &#x1D630; &#x1D631; &#x1D632; &#x1D633; &#x1D634; &#x1D635; &#x1D636; &#x1D637; &#x1D638; &#x1D639; &#x1D63A; &#x1D63B;";
+			
+			var fllDict = [];
+			var mssDict = [];
+			
+			var buffer = "";
+			var b = true;
+			
+			function dictSize(dict){ 
+				c = 0; 
+				for (i in dict) 
+					++c; 
+				return c; 
+			}
+			
+			function fillDict(src, dict) { 
+				if (dictSize(dict > 0)) return;
+				if (!src.includes(" ")) { 
+					for (var i = 0; i < alphabet.length; i++)
+						dict[alphabet[i]] = src[i];
+				}
+				else { 
+					var srcSplitted = src.split(' ');
+					for (var i = 0; i < alphabet.length; i++)
+						dict[alphabet[i]] = srcSplitted[i];
+				}			
+			}
+			
+			function convert() { 
+				if (combobox.options[combobox.selectedIndex].value == 0) { 
+					for (var i = 0; i < input.value.length; i++) { 
+						var character = fllDict[input.value.charAt(i)]
+						if (character != null) { 
+							buffer += character;
+						}
+						else { 
+							buffer += input.value.charAt(i);
+						}
+					}
+				}
+				else if (combobox.options[combobox.selectedIndex].value == 1) { 
+					for (var i = 0; i < input.value.length; i++) { 
+						var character = mssDict[input.value.charAt(i)]
+						if (character != null) { 
+							buffer += character;
+						}
+						else { 
+							buffer += input.value.charAt(i);
+						}
+					}
+				}
+				else if (combobox.options[combobox.selectedIndex].value == 2) { 
+					for (var i = 0; i < input.value.length; i++) { 
+						if (b == true) { 
+							buffer += input.value.charAt(i).toUpperCase();
+						}
+						else { 
+							buffer += input.value.charAt(i).toLowerCase();
+						}
+						b = !b;
+					}
+				}
+				output.innerHTML = buffer;
+				buffer = "";
+				b = true;
+			}
+			
+			window.onload = function() {
+				fillDict(fll, fllDict);
+				fillDict(mss, mssDict);
+			}
+		</script>
+	</body>
+</html>
